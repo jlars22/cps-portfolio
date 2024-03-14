@@ -1,7 +1,5 @@
-import React, { Component } from "react";
+const DriverStandings = () => {
+  return <div>DriverStandings</div>;
+};
 
-export default class DriverStandings extends Component {
-  render() {
-    return <div className="bg-gray-800">StandingsPage</div>;
-  }
-}
+export default DriverStandings;

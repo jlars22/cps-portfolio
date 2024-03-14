@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import TopBar from "components/TopBar";
-import Logo from "components/Logo";
+import TopBar from "components/TopBar/TopBar";
+import Logo from "components/Util/Logo";
 import DriverStandings from "components/DriverStandings/DriverStandings";
 import Calendar from "components/Calendar/Calendar";
 import Home from "components/Home/Home";

@@ -1,7 +1,5 @@
-import React, { Component } from "react";
+const Calendar = () => {
+  return <div>Calendar</div>;
+};
 
-export default class Calendar extends Component {
-  render() {
-    return <div className="bg-gray-800">CalendarPage</div>;
-  }
-}
+export default Calendar;
