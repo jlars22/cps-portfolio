@@ -1,7 +1,7 @@
-package org.cpsportfolio.backend.util;
+package org.cpsportfolio.backend.service.external;
 
 import org.springframework.http.ResponseEntity;
 
 public interface FormulaOneExternalAPI {
-    public ResponseEntity<String> getRaceCalendar();
+    ResponseEntity<String> getCurrentRaceCalendar();
 }
