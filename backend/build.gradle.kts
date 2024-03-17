@@ -35,7 +35,19 @@ tasks.withType<Test> {
 spotless {
     java {
         toggleOffOn()
-        palantirJavaFormat()
+        prettier(
+            mapOf(
+                "prettier" to "3.0.3",
+                "prettier-plugin-java" to "2.3.0"
+            )
+        ).config(
+            mapOf(
+                "parser" to "java",
+                "printWidth" to 100,
+                "tabWidth" to 4,
+                "plugins" to listOf("prettier-plugin-java")
+            )
+        )
         removeUnusedImports()
         trimTrailingWhitespace()
         endWithNewline()

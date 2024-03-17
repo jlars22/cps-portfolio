@@ -1,19 +1,20 @@
 package org.cpsportfolio.backend.util;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class CountryCodes {
 
     /*
      * I know this is cursed, but it seems to be the most reliable way to do this
      * Since my external API sometimes returns the full country name and sometimes the alpha3 code,
-     * I could not think of a better way to do this
+     * I could not think of a better way to do this. Maybe I could use an external API to convert,
+     * but that would be a lot of HTTP requests and I don't want to rely on an external API for this.
      *
      * Found original map here: https://stackoverflow.com/questions/14155049/iso2-country-code-from-country-name
      */
 
-    final Map<String, String> map = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    final Map<String, String> map = new HashMap<>();
 
     public CountryCodes() {
         map.put("United Arab Emirates", "AE");
