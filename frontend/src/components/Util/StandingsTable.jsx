@@ -9,7 +9,17 @@ const StandingsTable = ({ headers, data, renderRow }) => (
         ))}
       </tr>
     </thead>
-    <tbody>{data.map((item, index) => renderRow(item, index))}</tbody>
+    <tbody>
+      {data && data.length > 0 ? (
+        data.map((item, index) => renderRow(item, index))
+      ) : (
+        <tr>
+          <td colSpan={headers.length} className="p-4 text-gray-300">
+            No data available
+          </td>
+        </tr>
+      )}
+    </tbody>
   </table>
 );
 

@@ -4,6 +4,7 @@ import { FaFlagCheckered } from "react-icons/fa6";
 import { BsStopwatchFill } from "react-icons/bs";
 import { FaCheckCircle } from "react-icons/fa";
 import { FaHome } from "react-icons/fa";
+import { FaChartBar } from "react-icons/fa";
 
 const Logo = ({ type }) => {
   switch (type) {
@@ -19,6 +20,8 @@ const Logo = ({ type }) => {
       return <FaFlagCheckered />;
     case "practice":
       return <FaCheckCircle />;
+    case "overview":
+      return <FaChartBar />;
     default:
       return null;
   }

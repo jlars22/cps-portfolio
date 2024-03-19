@@ -5,6 +5,7 @@ import Logo from "components/Util/Logo";
 import DriverStandings from "components/DriverStandings/DriverStandings";
 import Calendar from "components/Calendar/Calendar";
 import Home from "components/Home/Home";
+import Overview from "components/Overview/Overview";
 
 export default function App() {
   const links = [
@@ -13,6 +14,12 @@ export default function App() {
       path: "/",
       component: <Home />,
       logo: <Logo type="home" />,
+    },
+    {
+      label: "Overview",
+      path: "/overview",
+      component: <Overview />,
+      logo: <Logo type="overview" />,
     },
     {
       label: "Driver Standings",
