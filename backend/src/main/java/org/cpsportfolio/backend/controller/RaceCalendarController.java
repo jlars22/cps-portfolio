@@ -19,4 +19,9 @@ public class RaceCalendarController {
     public List<RaceCalendarDto> getRaceCalendar() {
         return raceCalendarService.getCurrentRaceCalendar();
     }
+
+    @GetMapping("/next")
+    public RaceCalendarDto getNextRace() {
+        return raceCalendarService.getNextRace();
+    }
 }

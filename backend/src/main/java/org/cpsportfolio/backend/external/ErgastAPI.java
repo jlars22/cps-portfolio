@@ -14,7 +14,7 @@ public class ErgastAPI implements FormulaOneAPI {
     private final String baseUrl = "https://ergast.com/api/f1";
 
     @Override
-    public ResponseEntity<String> getCurrentRaceCalendar() {
-        return httpClient.doGetRequest(baseUrl + "/current.json");
+    public String getCurrentRaceCalendar() {
+        return httpClient.doGetRequest(baseUrl + "/current.json").getBody();
     }
 }

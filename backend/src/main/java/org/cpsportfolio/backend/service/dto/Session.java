@@ -1,3 +1,12 @@
 package org.cpsportfolio.backend.service.dto;
 
-public record Session(String name, String day) {}
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+public class Session {
+    String name;
+    String date;
+    Boolean nextUp;
+}
