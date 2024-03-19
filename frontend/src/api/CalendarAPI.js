@@ -2,7 +2,7 @@ import axiosInstance from "./config/axiosConfig";
 
 const CalendarAPI = {
   getCurrentCalendar: async () => {
-    const response = await axiosInstance.get("/api/calendar/current");
+    const response = await axiosInstance.get("/api/calendar");
     return response.data;
   },
 
