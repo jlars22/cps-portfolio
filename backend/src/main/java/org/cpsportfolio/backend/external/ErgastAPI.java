@@ -3,7 +3,6 @@ package org.cpsportfolio.backend.external;
 import lombok.RequiredArgsConstructor;
 import org.cpsportfolio.backend.service.FormulaOneAPI;
 import org.cpsportfolio.backend.util.HttpClient;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Session {
+
     String name;
     String date;
     Boolean nextUp;

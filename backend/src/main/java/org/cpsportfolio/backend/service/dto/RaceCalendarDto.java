@@ -1,13 +1,13 @@
 package org.cpsportfolio.backend.service.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 public class RaceCalendarDto {
+
     String name;
     String circuit;
     String date;
