@@ -27,16 +27,21 @@ public class RaceCalendarService {
     private final ObjectMapper objectMapper;
 
     public List<RaceCalendarDto> getCurrentRaceCalendar() {
-        MRData data = getMRData();
+        MRData data = getCurrentRaceCalendarMRData();
         return convertExternalResponseToRaceCalendarDtos(data);
     }
 
     public RaceCalendarDto getNextRace() {
-        MRData data = getMRData();
+        MRData data = getCurrentRaceCalendarMRData();
         return findNextRaceItem(data);
     }
 
-    private MRData getMRData() {
+    public int getRaceCount() {
+        MRData data = getCurrentRaceCalendarMRData();
+        return data.getRaceTable().getRaces().size();
+    }
+
+    private MRData getCurrentRaceCalendarMRData() {
         String externalResponse = formulaOneExternal.getCurrentRaceCalendar();
         try {
             return objectMapper

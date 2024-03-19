@@ -24,4 +24,10 @@ public class RaceCalendarController {
     public RaceCalendarDto getNextRace() {
         return raceCalendarService.getNextRace();
     }
+
+    @GetMapping("/count")
+    public int getRaceCount() {
+        return raceCalendarService.getRaceCount();
+    }
+
 }
