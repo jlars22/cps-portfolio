@@ -12,7 +12,7 @@ export default function App() {
       label: "Home",
       path: "/",
       component: <Home />,
-      logo: <Logo />,
+      logo: <Logo type="home" />,
     },
     {
       label: "Driver Standings",

@@ -10,6 +10,11 @@ const CalendarAPI = {
     const response = await axiosInstance.get("/api/calendar/next");
     return response.data;
   },
+
+  getRaceCount: async () => {
+    const response = await axiosInstance.get("/api/calendar/count");
+    return response.data;
+  },
 };
 
 export default CalendarAPI;

@@ -3,9 +3,12 @@ import { GiFullMotorcycleHelmet } from "react-icons/gi";
 import { FaFlagCheckered } from "react-icons/fa6";
 import { BsStopwatchFill } from "react-icons/bs";
 import { FaCheckCircle } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 
 const Logo = ({ type }) => {
   switch (type) {
+    case "home":
+      return <FaHome />;
     case "calendar":
       return <IoCalendar />;
     case "driverstandings":

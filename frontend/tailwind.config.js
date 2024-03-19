@@ -6,6 +6,9 @@ module.exports = withMT({
   theme: {
     extend: {
       colors: {
+        gold: "#D4B038",
+        silver: "#8D949B",
+        bronze: "#CD7F32",
         gray: {
           900: "#202225",
           800: "#2f3136",
