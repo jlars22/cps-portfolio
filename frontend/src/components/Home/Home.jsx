@@ -1,11 +1,25 @@
 import { Card } from "@material-tailwind/react";
+import CalendarAPI from "api/CalendarAPI";
 import Racecard from "components/Util/Racecard";
-import races from "../Util/races";
+import { useEffect, useState } from "react";
 
 const Home = () => {
-  const upcomingRace = races.find(
-    (race) => race.sessions[race.sessions.length - 1].day > new Date(),
-  );
+  const [upcommingRace, setUpCommingRace] = useState([]);
+
+  useEffect(() => {
+    const fetchUpcommingRace = async () => {
+      try {
+        console.log("Fetching up");
+        const data = await CalendarAPI.getNextRace();
+        console.log(data);
+        setUpCommingRace(data);
+      } catch (error) {
+        console.error("Error fetching calendar data:", error);
+      }
+    };
+
+    fetchUpcommingRace();
+  }, []);
 
   return (
     <Card className="ml-4 mr-4 mt-4 rounded-2xl bg-gray-800 p-4 shadow-md">
@@ -13,7 +27,7 @@ const Home = () => {
         <h1 className="mb-2 text-4xl font-bold text-gray-300">
           Next on the calendar
         </h1>
-        {upcomingRace && <Racecard race={upcomingRace} />}
+        {upcommingRace && <Racecard race={upcommingRace} />}
       </div>
     </Card>
   );
