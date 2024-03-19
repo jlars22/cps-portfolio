@@ -16,4 +16,16 @@ public class ErgastAPI implements FormulaOneAPI {
     public String getCurrentRaceCalendar() {
         return httpClient.doGetRequest(baseUrl + "/current.json").getBody();
     }
+
+    @Override
+    public String getCurrentDriverStandings() {
+        return httpClient.doGetRequest(baseUrl + "/2024/driverStandings.json").getBody();
+    }
+
+    @Override
+    public String getCurrentDriverStandingsByRound(int round) {
+        return httpClient
+            .doGetRequest(baseUrl + "/2024/" + round + "/driverStandings.json")
+            .getBody();
+    }
 }

@@ -1,4 +1,4 @@
-package org.cpsportfolio.backend.service.dto;
+package org.cpsportfolio.backend.service.dto.racecalendar;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

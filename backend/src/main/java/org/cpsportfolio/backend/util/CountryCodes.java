@@ -7,9 +7,11 @@ public class CountryCodes {
 
     /*
      * I know this is cursed, but it seems to be the most reliable way to do this
-     * Since my external API sometimes returns the full country name and sometimes an alpha2 or alpha3 countrycode,
+     * Since my external API sometimes returns the full country name, nationality, or even sometimes alpha3 countrycode,
      * I could not think of a better way to do this. Maybe I could use an external API to convert,
      * but that would be a lot of HTTP requests and I don't want to rely on an external API for this.
+     *
+     * I need this to display the country flag in the frontend, and I need the alpha2 country code for that.
      *
      * Found original map here: https://stackoverflow.com/questions/14155049/iso2-country-code-from-country-name
      */
@@ -111,6 +113,22 @@ public class CountryCodes {
         map.put("Uruguay", "UY");
         map.put("Vietnam", "VN");
         map.put("South Africa", "ZA");
+
+        map.put("Dutch", "NL");
+        map.put("Mexican", "MX");
+        map.put("Monegasque", "MC");
+        map.put("British", "GB");
+        map.put("Australian", "AU");
+        map.put("Spanish", "ES");
+        map.put("German", "DE");
+        map.put("Canadian", "CA");
+        map.put("Thai", "TH");
+        map.put("Chinese", "CN");
+        map.put("Danish", "DK");
+        map.put("French", "FR");
+        map.put("Japanese", "JP");
+        map.put("American", "US");
+        map.put("Finnish", "FI");
     }
 
     public String getCode(String country) {

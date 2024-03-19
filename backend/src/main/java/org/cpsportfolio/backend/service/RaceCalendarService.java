@@ -1,5 +1,6 @@
 package org.cpsportfolio.backend.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -9,11 +10,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.cpsportfolio.backend.external.generated.MRData;
-import org.cpsportfolio.backend.external.generated.MRDataWrapper;
-import org.cpsportfolio.backend.external.generated.RacesItem;
-import org.cpsportfolio.backend.service.dto.RaceCalendarDto;
-import org.cpsportfolio.backend.service.dto.Session;
+import org.cpsportfolio.backend.external.generated.calendar.MRData;
+import org.cpsportfolio.backend.external.generated.calendar.MRDataWrapperCalendar;
+import org.cpsportfolio.backend.external.generated.calendar.RacesItem;
+import org.cpsportfolio.backend.service.dto.racecalendar.RaceCalendarDto;
+import org.cpsportfolio.backend.service.dto.racecalendar.Session;
 import org.cpsportfolio.backend.util.CountryCodes;
 import org.springframework.stereotype.Service;
 
@@ -26,32 +27,32 @@ public class RaceCalendarService {
     private final ObjectMapper objectMapper;
 
     public List<RaceCalendarDto> getCurrentRaceCalendar() {
-        try {
-            String externalResponse = formulaOneExternal.getCurrentRaceCalendar();
-            MRDataWrapper data = objectMapper.readValue(externalResponse, MRDataWrapper.class);
-            return convertExternalResponseToRaceCalendarDtos(data);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve external data", e);
-        }
+        MRData data = getMRData();
+        return convertExternalResponseToRaceCalendarDtos(data);
     }
 
     public RaceCalendarDto getNextRace() {
+        MRData data = getMRData();
+        return findNextRaceItem(data);
+    }
+
+    private MRData getMRData() {
+        String externalResponse = formulaOneExternal.getCurrentRaceCalendar();
         try {
-            String externalResponse = formulaOneExternal.getCurrentRaceCalendar();
-            MRDataWrapper data = objectMapper.readValue(externalResponse, MRDataWrapper.class);
-            return findNextRaceItem(data);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to retrieve external data", e);
+            return objectMapper
+                .readValue(externalResponse, MRDataWrapperCalendar.class)
+                .getMrData();
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private RaceCalendarDto findNextRaceItem(MRDataWrapper data) {
-        MRData mrData = data.getMrData();
+    private RaceCalendarDto findNextRaceItem(MRData data) {
         List<RaceCalendarDto> raceCalendarDto = new ArrayList<>();
 
         LocalDate currentDate = LocalDate.now();
 
-        for (RacesItem raceItem : mrData.getRaceTable().getRaces()) {
+        for (RacesItem raceItem : data.getRaceTable().getRaces()) {
             LocalDate raceDate = LocalDate.parse(raceItem.getDate());
 
             if (raceDate.isAfter(currentDate) || raceDate.isEqual(currentDate)) {
@@ -64,11 +65,10 @@ public class RaceCalendarService {
         return null;
     }
 
-    private List<RaceCalendarDto> convertExternalResponseToRaceCalendarDtos(MRDataWrapper data) {
-        MRData mrData = data.getMrData();
+    private List<RaceCalendarDto> convertExternalResponseToRaceCalendarDtos(MRData data) {
         List<RaceCalendarDto> raceCalendarDtos = new ArrayList<>();
 
-        for (RacesItem raceItem : mrData.getRaceTable().getRaces()) {
+        for (RacesItem raceItem : data.getRaceTable().getRaces()) {
             addRaceItemToRaceCalendarDtos(raceItem, raceCalendarDtos);
         }
 
@@ -83,8 +83,8 @@ public class RaceCalendarService {
     ) {
         String name = raceItem.getRaceName();
         String circuit = raceItem.getCircuit().getCircuitName();
-        String date = formatDateToReadableFormat(raceItem.getDate());
-        String alpha2CountryCode = convertCountryNameToAlpha2Code(
+        String date = formatDateToDayOfWeekName(raceItem.getDate());
+        String alpha2CountryCode = countryCodes.getCode(
             raceItem.getCircuit().getLocation().getCountry()
         );
 
@@ -104,22 +104,7 @@ public class RaceCalendarService {
             )
         );
 
-        if (raceItem.getThirdPractice() != null) {
-            sessions.add(
-                createSession(
-                    "Practice 2",
-                    raceItem.getSecondPractice().getDate(),
-                    raceItem.getSecondPractice().getTime()
-                )
-            );
-            sessions.add(
-                createSession(
-                    "Practice 3",
-                    raceItem.getThirdPractice().getDate(),
-                    raceItem.getThirdPractice().getTime()
-                )
-            );
-        } else if (raceItem.getSprint() != null) {
+        if (isSprintWeekend(raceItem)) {
             sessions.add(
                 createSession(
                     "Sprint Qualifying",
@@ -134,6 +119,21 @@ public class RaceCalendarService {
                     raceItem.getSprint().getTime()
                 )
             );
+        } else {
+            sessions.add(
+                createSession(
+                    "Practice 2",
+                    raceItem.getSecondPractice().getDate(),
+                    raceItem.getSecondPractice().getTime()
+                )
+            );
+            sessions.add(
+                createSession(
+                    "Practice 3",
+                    raceItem.getThirdPractice().getDate(),
+                    raceItem.getThirdPractice().getTime()
+                )
+            );
         }
 
         sessions.add(
@@ -146,6 +146,10 @@ public class RaceCalendarService {
         sessions.add(createSession("Race", raceItem.getDate(), raceItem.getTime()));
 
         return sessions;
+    }
+
+    private boolean isSprintWeekend(RacesItem raceItem) {
+        return raceItem.getSprint() != null;
     }
 
     private void highlightNextSession(List<RaceCalendarDto> raceCalendarDtos) {
@@ -172,14 +176,10 @@ public class RaceCalendarService {
         return new Session(name, dateTime, false);
     }
 
-    private String formatDateToReadableFormat(String formattedDate) {
+    private String formatDateToDayOfWeekName(String formattedDate) {
         DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate date = LocalDate.parse(formattedDate, inputFormatter);
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
         return date.format(outputFormatter);
-    }
-
-    private String convertCountryNameToAlpha2Code(String countryName) {
-        return countryCodes.getCode(countryName);
     }
 }

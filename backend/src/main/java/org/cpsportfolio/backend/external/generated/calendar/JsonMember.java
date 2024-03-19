@@ -1,4 +1,4 @@
-package org.cpsportfolio.backend.external.generated;
+package org.cpsportfolio.backend.external.generated.calendar;
 
 import lombok.Data;
 

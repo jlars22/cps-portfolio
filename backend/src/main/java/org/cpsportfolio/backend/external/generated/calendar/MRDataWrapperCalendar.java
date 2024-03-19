@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class MRDataWrapper {
+public class MRDataWrapperCalendar {
 
     @JsonProperty("MRData")
     private MRData mrData;

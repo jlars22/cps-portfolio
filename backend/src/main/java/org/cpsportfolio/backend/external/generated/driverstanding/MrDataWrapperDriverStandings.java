@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
-public class MrDataWrapper {
+public class MrDataWrapperDriverStandings {
+
     @JsonProperty("MRData")
     private MRData mrData;
 }
