@@ -22,7 +22,12 @@ public class DriverStandingsService {
     private final CountryCodes countryCodes;
 
     public DriverStandingsDto getCurrentDriverStandings() {
-        MRData data = getMRData();
+        MRData data = getCurrentDriverStandingsMRData();
+        return convertExternalResponseToDriverStandingsDtos(data);
+    }
+
+    public DriverStandingsDto getDriverStandingsByRound(int round) {
+        MRData data = getDriverStandingsByRoundMRData(round);
         return convertExternalResponseToDriverStandingsDtos(data);
     }
 
@@ -55,8 +60,7 @@ public class DriverStandingsService {
         return new DriverStandingsDto(round, driverInfo);
     }
 
-    private MRData getMRData() {
-        String externalResponse = formulaOneExternal.getCurrentDriverStandings();
+    private MRData getMRData(String externalResponse) {
         try {
             return objectMapper
                 .readValue(externalResponse, MrDataWrapperDriverStandings.class)
@@ -64,5 +68,13 @@ public class DriverStandingsService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private MRData getCurrentDriverStandingsMRData() {
+        return getMRData(formulaOneExternal.getCurrentDriverStandings());
+    }
+
+    private MRData getDriverStandingsByRoundMRData(int round) {
+        return getMRData(formulaOneExternal.getCurrentDriverStandingsByRound(round));
     }
 }

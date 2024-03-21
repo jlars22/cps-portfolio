@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.cpsportfolio.backend.service.DriverStandingsService;
 import org.cpsportfolio.backend.service.dto.driverstandings.DriverStandingsDto;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,5 +18,10 @@ public class DriverStandingsController {
     @GetMapping
     public DriverStandingsDto getCurrentDriverStandings() {
         return driverStandingsService.getCurrentDriverStandings();
+    }
+
+    @GetMapping("/{round}")
+    public DriverStandingsDto getDriverStandingsByRound(@PathVariable int round) {
+        return driverStandingsService.getDriverStandingsByRound(round);
     }
 }

@@ -29,5 +29,4 @@ public class RaceCalendarController {
     public int getRaceCount() {
         return raceCalendarService.getRaceCount();
     }
-
 }
