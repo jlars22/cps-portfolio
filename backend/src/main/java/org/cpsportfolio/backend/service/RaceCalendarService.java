@@ -1,7 +1,5 @@
 package org.cpsportfolio.backend.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,12 +8,14 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.cpsportfolio.backend.external.FormulaOneAPI;
 import org.cpsportfolio.backend.external.generated.calendar.MRData;
 import org.cpsportfolio.backend.external.generated.calendar.MRDataWrapperCalendar;
 import org.cpsportfolio.backend.external.generated.calendar.RacesItem;
 import org.cpsportfolio.backend.service.dto.racecalendar.RaceCalendarDto;
 import org.cpsportfolio.backend.service.dto.racecalendar.Session;
 import org.cpsportfolio.backend.util.CountryCodes;
+import org.cpsportfolio.backend.util.JsonUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,8 +23,6 @@ import org.springframework.stereotype.Service;
 public class RaceCalendarService {
 
     private final FormulaOneAPI formulaOneExternal;
-    private final CountryCodes countryCodes;
-    private final ObjectMapper objectMapper;
 
     public List<RaceCalendarDto> getCurrentRaceCalendar() {
         MRData data = getCurrentRaceCalendarMRData();
@@ -43,13 +41,7 @@ public class RaceCalendarService {
 
     private MRData getCurrentRaceCalendarMRData() {
         String externalResponse = formulaOneExternal.getCurrentRaceCalendar();
-        try {
-            return objectMapper
-                .readValue(externalResponse, MRDataWrapperCalendar.class)
-                .getMrData();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return JsonUtil.parseJson(externalResponse, MRDataWrapperCalendar.class).getMrData();
     }
 
     private RaceCalendarDto findNextRaceItem(MRData data) {
@@ -89,13 +81,17 @@ public class RaceCalendarService {
         String name = raceItem.getRaceName();
         String circuit = raceItem.getCircuit().getCircuitName();
         String date = formatDateToDayOfWeekName(raceItem.getDate());
-        String alpha2CountryCode = countryCodes.getCode(
+        String alpha2CountryCode = CountryCodes.getCode(
             raceItem.getCircuit().getLocation().getCountry()
         );
+        double lat = Double.parseDouble(raceItem.getCircuit().getLocation().getLat());
+        double lon = Double.parseDouble(raceItem.getCircuit().getLocation().getLon());
 
         List<Session> sessions = createSessions(raceItem);
 
-        raceCalendarDtos.add(new RaceCalendarDto(name, circuit, date, alpha2CountryCode, sessions));
+        raceCalendarDtos.add(
+            new RaceCalendarDto(name, circuit, date, alpha2CountryCode, lat, lon, sessions)
+        );
     }
 
     private List<Session> createSessions(RacesItem raceItem) {

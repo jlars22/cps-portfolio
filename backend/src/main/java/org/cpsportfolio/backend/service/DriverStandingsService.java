@@ -1,10 +1,9 @@
 package org.cpsportfolio.backend.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.cpsportfolio.backend.external.FormulaOneAPI;
 import org.cpsportfolio.backend.external.generated.driverstanding.DriverStandingsItem;
 import org.cpsportfolio.backend.external.generated.driverstanding.MRData;
 import org.cpsportfolio.backend.external.generated.driverstanding.MrDataWrapperDriverStandings;
@@ -12,6 +11,7 @@ import org.cpsportfolio.backend.repository.DriverStandingsRepository;
 import org.cpsportfolio.backend.service.dto.driverstandings.DriverInfo;
 import org.cpsportfolio.backend.service.dto.driverstandings.DriverStandingsDto;
 import org.cpsportfolio.backend.util.CountryCodes;
+import org.cpsportfolio.backend.util.JsonUtil;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,8 +19,6 @@ import org.springframework.stereotype.Service;
 public class DriverStandingsService {
 
     private final FormulaOneAPI formulaOneExternal;
-    private final ObjectMapper objectMapper;
-    private final CountryCodes countryCodes;
     private final DriverStandingsRepository driverStandingsRepository;
 
     public DriverStandingsDto getCurrentDriverStandings() {
@@ -30,9 +28,7 @@ public class DriverStandingsService {
 
     public DriverStandingsDto getDriverStandingsByRound(int round) {
         MRData data = getDriverStandingsByRoundMRData(round);
-        DriverStandingsDto answer = convertExternalResponseToDriverStandingsDtos(data);
-        driverStandingsRepository.save(answer);
-        return answer;
+        return convertExternalResponseToDriverStandingsDtos(data);
     }
 
     private DriverStandingsDto convertExternalResponseToDriverStandingsDtos(MRData data) {
@@ -52,7 +48,7 @@ public class DriverStandingsService {
                 new DriverInfo(
                     driver.getPosition(),
                     driver.getDriver().getGivenName() + " " + driver.getDriver().getFamilyName(),
-                    countryCodes.getCode(driver.getDriver().getNationality()),
+                    CountryCodes.getCode(driver.getDriver().getNationality()),
                     driver.getConstructors().get(0).getName(),
                     driver.getPoints(),
                     driver.getDriver().getCode(),
@@ -65,13 +61,7 @@ public class DriverStandingsService {
     }
 
     private MRData getMRData(String externalResponse) {
-        try {
-            return objectMapper
-                .readValue(externalResponse, MrDataWrapperDriverStandings.class)
-                .getMrData();
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
+        return JsonUtil.parseJson(externalResponse, MrDataWrapperDriverStandings.class).getMrData();
     }
 
     private MRData getCurrentDriverStandingsMRData() {

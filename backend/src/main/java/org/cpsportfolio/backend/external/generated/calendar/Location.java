@@ -11,5 +11,5 @@ public class Location {
     private String lat;
 
     @JsonProperty("long")
-    private String jsonMemberLong;
+    private String lon;
 }

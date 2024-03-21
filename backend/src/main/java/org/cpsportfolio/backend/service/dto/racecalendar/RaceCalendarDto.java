@@ -12,5 +12,7 @@ public class RaceCalendarDto {
     String circuit;
     String date;
     String alpha2CountryCode;
+    double lat;
+    double lon;
     List<Session> sessions;
 }

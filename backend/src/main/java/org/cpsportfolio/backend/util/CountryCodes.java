@@ -16,7 +16,7 @@ public class CountryCodes {
      * Found original map here: https://stackoverflow.com/questions/14155049/iso2-country-code-from-country-name
      */
 
-    final Map<String, String> map = new HashMap<>();
+    static final Map<String, String> map = new HashMap<>();
 
     public CountryCodes() {
         map.put("United Arab Emirates", "AE");
@@ -131,7 +131,7 @@ public class CountryCodes {
         map.put("Finnish", "FI");
     }
 
-    public String getCode(String country) {
+    public static String getCode(String country) {
         String countryFound = map.get(country);
         if (countryFound == null) {
             return country;

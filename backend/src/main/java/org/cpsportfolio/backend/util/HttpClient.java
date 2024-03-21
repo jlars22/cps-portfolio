@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class HttpClient {
 
-    private final RestTemplate restTemplate;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     public ResponseEntity<String> doGetRequest(String url) {
         return restTemplate.exchange(url, HttpMethod.GET, null, String.class);

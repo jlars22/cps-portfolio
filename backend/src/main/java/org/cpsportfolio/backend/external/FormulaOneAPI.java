@@ -1,4 +1,4 @@
-package org.cpsportfolio.backend.service;
+package org.cpsportfolio.backend.external;
 
 public interface FormulaOneAPI {
     String getCurrentRaceCalendar();

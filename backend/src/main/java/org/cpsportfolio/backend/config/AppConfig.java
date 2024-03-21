@@ -1,16 +1,21 @@
 package org.cpsportfolio.backend.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.cpsportfolio.backend.util.CountryCodes;
+import lombok.Getter;
+import lombok.Setter;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
+@Getter
+@Setter
+@ConfigurationProperties(prefix = "app")
 public class AppConfig {
+
+    private String weatherApiKey;
 
     @Bean
     public WebMvcConfigurer corsConfigurer(Environment environment) {
@@ -21,20 +26,5 @@ public class AppConfig {
                 registry.addMapping("/**").allowedOrigins(frontendUrl);
             }
         };
-    }
-
-    @Bean
-    public RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
-    @Bean
-    public CountryCodes countryCodes() {
-        return new CountryCodes();
     }
 }
