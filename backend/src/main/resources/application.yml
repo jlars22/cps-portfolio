@@ -5,3 +5,11 @@ spring:
     name: backend
   config:
     import: file:.env[.properties]
+  data:
+    mongodb:
+      host: ${MONGODB_HOST}
+      port: 27017
+      authentication-database: admin
+      username: ${MONGODB_USERNAME}
+      password: ${MONGODB_PASSWORD}
+      database: ${MONGODB_DATABASE}

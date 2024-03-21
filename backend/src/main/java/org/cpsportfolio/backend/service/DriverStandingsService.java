@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.cpsportfolio.backend.external.generated.driverstanding.DriverStandingsItem;
 import org.cpsportfolio.backend.external.generated.driverstanding.MRData;
 import org.cpsportfolio.backend.external.generated.driverstanding.MrDataWrapperDriverStandings;
+import org.cpsportfolio.backend.repository.DriverStandingsRepository;
 import org.cpsportfolio.backend.service.dto.driverstandings.DriverInfo;
 import org.cpsportfolio.backend.service.dto.driverstandings.DriverStandingsDto;
 import org.cpsportfolio.backend.util.CountryCodes;
@@ -20,6 +21,7 @@ public class DriverStandingsService {
     private final FormulaOneAPI formulaOneExternal;
     private final ObjectMapper objectMapper;
     private final CountryCodes countryCodes;
+    private final DriverStandingsRepository driverStandingsRepository;
 
     public DriverStandingsDto getCurrentDriverStandings() {
         MRData data = getCurrentDriverStandingsMRData();
@@ -28,7 +30,9 @@ public class DriverStandingsService {
 
     public DriverStandingsDto getDriverStandingsByRound(int round) {
         MRData data = getDriverStandingsByRoundMRData(round);
-        return convertExternalResponseToDriverStandingsDtos(data);
+        DriverStandingsDto answer = convertExternalResponseToDriverStandingsDtos(data);
+        driverStandingsRepository.save(answer);
+        return answer;
     }
 
     private DriverStandingsDto convertExternalResponseToDriverStandingsDtos(MRData data) {
