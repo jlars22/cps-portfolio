@@ -3,8 +3,6 @@
 </p>
 
 ## Introduction
-This repository contains my project for the CPS exam portfolio. 
-
 This is a web application showing information for the current [Formula 1 Season](https://www.formula1.com/).
 
 Information includes:
