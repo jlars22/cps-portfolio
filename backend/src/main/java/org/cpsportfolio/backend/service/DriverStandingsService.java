@@ -1,7 +1,10 @@
 package org.cpsportfolio.backend.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import lombok.RequiredArgsConstructor;
 import org.cpsportfolio.backend.external.FormulaOneAPI;
 import org.cpsportfolio.backend.external.generated.driverstanding.DriverStandingsItem;
@@ -31,29 +34,46 @@ public class DriverStandingsService {
         return convertExternalResponseToDriverStandingsDtos(data);
     }
 
+    public List<Map<String, Object>> getDriverStandingsSimple() {
+        return mapDriverStandingsDtoToMap(getCurrentDriverStandings());
+    }
+
+    private List<Map<String, Object>> mapDriverStandingsDtoToMap(DriverStandingsDto driverStandingsDto) {
+        List<Map<String, Object>> standingsList = new ArrayList<>();
+
+        for (DriverInfo driverInfo : driverStandingsDto.getDriverInfo()) {
+            Map<String, Object> driverMap = new HashMap<>();
+            driverMap.put("name", driverInfo.getName());
+            driverMap.put("points", Integer.valueOf(driverInfo.getPoints()));
+            standingsList.add(driverMap);
+        }
+        standingsList.sort((m1, m2) -> Integer.compare((Integer) m2.get("points"), (Integer) m1.get("points")));
+        return standingsList;
+    }
+
     private DriverStandingsDto convertExternalResponseToDriverStandingsDtos(MRData data) {
         int round = Integer.parseInt(
-            data.getStandingsTable().getStandingsLists().get(0).getRound()
+                data.getStandingsTable().getStandingsLists().get(0).getRound()
         );
         List<DriverInfo> driverInfo = new ArrayList<>();
 
         List<DriverStandingsItem> driverStandings = data
-            .getStandingsTable()
-            .getStandingsLists()
-            .get(0)
-            .getDriverStandings();
+                .getStandingsTable()
+                .getStandingsLists()
+                .get(0)
+                .getDriverStandings();
 
         for (DriverStandingsItem driver : driverStandings) {
             driverInfo.add(
-                new DriverInfo(
-                    driver.getPosition(),
-                    driver.getDriver().getGivenName() + " " + driver.getDriver().getFamilyName(),
-                    CountryCodes.getCode(driver.getDriver().getNationality()),
-                    driver.getConstructors().get(0).getName(),
-                    driver.getPoints(),
-                    driver.getDriver().getCode(),
-                    driver.getWins()
-                )
+                    new DriverInfo(
+                            driver.getPosition(),
+                            driver.getDriver().getGivenName() + " " + driver.getDriver().getFamilyName(),
+                            CountryCodes.getCode(driver.getDriver().getNationality()),
+                            driver.getConstructors().get(0).getName(),
+                            driver.getPoints(),
+                            driver.getDriver().getCode(),
+                            driver.getWins()
+                    )
             );
         }
 

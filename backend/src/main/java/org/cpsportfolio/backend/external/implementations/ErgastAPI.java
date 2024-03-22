@@ -1,6 +1,7 @@
-package org.cpsportfolio.backend.external;
+package org.cpsportfolio.backend.external.implementations;
 
 import lombok.RequiredArgsConstructor;
+import org.cpsportfolio.backend.external.FormulaOneAPI;
 import org.cpsportfolio.backend.util.HttpClient;
 import org.springframework.stereotype.Service;
 

@@ -18,7 +18,7 @@ public class CountryCodes {
 
     static final Map<String, String> map = new HashMap<>();
 
-    public CountryCodes() {
+    static  {
         map.put("United Arab Emirates", "AE");
         map.put("UAE", "AE");
         map.put("Afghanistan, Islamic State Of", "AF");
